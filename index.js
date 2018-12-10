@@ -78,32 +78,40 @@ class WsChatServer {
     this.wss.on('connection', function(ws) {
 
       const id = Math.random();
-      this.clients[id] = ws;
+      this.clients[id] = { ws, name: '' };
       const clients = this.clients;
       ws.on('message', function(message) {
         const event = JSON.parse(message);
         if(event.type === 'greetings') {
           for (const key in clients) {
-            clients[key].send(JSON.stringify({ type: 'system', message: `Пользователь с ником ${ event.name } присоединился`}));
+            clients[id].name = event.name;
+            clients[key].ws.send(JSON.stringify({ type: 'system', message: `Пользователь с ником ${ clients[id].name } присоединился`}));
           }
         }
 
         if(event.type === 'message') {
           for (const key in clients) {
-            clients[key].send(JSON.stringify({ type: 'message', message: event.message, name: event.name }));
+            clients[key].ws.send(JSON.stringify({ type: 'message', message: event.message, name: clients[id].name }));
           }
-        }
+        }/*
 
         if(event.type === 'disconnect') {
           for (const key in clients) {
-            clients[key].send(JSON.stringify({ type: 'system', message: `Пользователь с ником ${ event.name } отключился`}));
+            clients[key].ws.send(JSON.stringify({ type: 'system', message: `Пользователь с ником ${ event.name } отключился`}));
           }
-        }
+        }*/
 
       });
 
       ws.on('close', function() {
+        const name = clients[id].name;
         delete clients[id];
+        for (const key in clients) {
+          try {
+            clients[key].ws.send(JSON.stringify({ type: 'system', message: `Пользователь с ником ${ name } отключился`}));
+          } catch (e) {
+          }
+        }
       });
     });
 

@@ -65,8 +65,10 @@ class Chat extends React.Component {
     this.setState({ ws: socket }) 
   }
 
-  componentWillUnMount() {
-    this.state.ws.send(JSON.stringify({type: 'disconnect', name: this.state.name}));
+  componentWillUnmount() {/*
+    alert('test');
+    console.log('test');*/
+    //this.state.ws.send(JSON.stringify({type: 'disconnect', name: this.state.name}));
     this.state.ws.close();
   }
 
