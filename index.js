@@ -1,11 +1,10 @@
 const express = require("express");
 const fs = require("fs");
 
+const fastify = require('fastify')();
+
+
 const app = express();
-
-app.set("port", process.env.PORT || 3001);
-
-console.log(process.env.NODE_ENV);
 
 const chatData = [
   {
@@ -25,6 +24,8 @@ const chatData = [
   }
 ];
 
+app.set("port", process.env.PORT || 3001);
+
 if (process.env.NODE_ENV === "production") {
   app.use(express.static("build"));
 }
@@ -34,15 +35,27 @@ app.get("/api/roomList", (req, res) => {
 });
 
 app.get('/gallery/:name', async (request, res) => {
-  console.log(__dirname);
   const options = {
     root: __dirname,
   };
   res.sendFile(`/gallery/${ request.params.name }.jpg`, options);
 });
 
-app.listen(app.get("port"), () => {
-  console.log(`server running at port ${app.get("port")}`);
+//app.listen(app.get("port"), () => {
+//  console.log(`server running at port ${app.get("port")}`);
+//});
+
+fastify.register(require('fastify-static'), {
+  root: path.join(__dirname, 'public'),
+  prefix: '/public/', // optional: default '/'
+});
+
+fastify.listen(process.env.PORT, function (err, address) {
+  if (err) {
+    fastify.log.error(err);
+    process.exit(1);
+  }
+  fastify.log.info(`server listening on ${address}`)
 });
 
 /*
