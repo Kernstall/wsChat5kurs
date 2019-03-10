@@ -11,17 +11,17 @@ const chatData = [
   {
     name: 'Машины',
     wsConnect: 8082,
-    imgSrc: 'https://127.0.0.1:8081/image/car'
+    imgSrc: '/gallery/car'
   },
   {
     name: 'Мода',
     wsConnect: 8083,
-    imgSrc: 'https://127.0.0.1:8081/image/fashion'
+    imgSrc: '/gallery/fashion'
   },
   {
     name: 'Здоровье',
     wsConnect: 8084,
-    imgSrc: 'https://127.0.0.1:8081/image/health'
+    imgSrc: '/gallery/health'
   }
 ];
 
