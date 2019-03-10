@@ -33,6 +33,10 @@ app.get("/api/roomList", (req, res) => {
   res.json(chatData);
 });
 
+app.get('/gallery/:name', async (request, res) => {
+  res.sendFile(`gallery/${ request.params.name }.jpg`)
+});
+
 app.listen(app.get("port"), () => {
   console.log(`server running at port ${app.get("port")}`);
 });
