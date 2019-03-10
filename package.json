@@ -6,6 +6,7 @@
   "dependencies": {
     "@material-ui/core": "^3.6.1",
     "@material-ui/icons": "^3.0.1",
+    "express": "^4.16.4",
     "fastify": "^1.13.1",
     "material-ui-upload": "^1.2.1",
     "prop-types": "^15.6.2",
@@ -18,7 +19,7 @@
     "ws": "^6.1.2"
   },
   "scripts": {
-    "start": "react-scripts start | node index.js",
+    "start": "node index.js",
     "server": "node index.js",
     "client": "react-scripts start",
     "build": "react-scripts build",

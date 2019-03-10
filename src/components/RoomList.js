@@ -39,22 +39,22 @@ class RoomList extends React.Component {
   }
 
   componentWillMount(){
-    /*const a = (obj) => {
-      fetch('/', {method: 'GET', mode: 'cors'})//https://127.0.0.1:8081
+    const a = (obj) => {
+      fetch('/api/roomList', { method: 'GET' })//https://127.0.0.1:8081
         .then(function (response) {
           return response.json();
         })
         .then(function (data) {
           obj.setState({data});
         })
-    };*/
-    fetch("/app", { method: 'GET' }).then(function (response) {
-      console.log(response);
-    });
+    };
     /*fetch("/app", { method: 'GET' }).then(function (response) {
       console.log(response);
     });*/
-    //a(this);
+    /*fetch("/app", { method: 'GET' }).then(function (response) {
+      console.log(response);
+    });*/
+    a(this);
   }
 
   render() {

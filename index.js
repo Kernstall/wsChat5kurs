@@ -1,3 +1,43 @@
+const express = require("express");
+const fs = require("fs");
+
+const app = express();
+
+app.set("port", process.env.PORT || 3001);
+
+console.log(process.env.NODE_ENV);
+
+const chatData = [
+  {
+    name: 'Машины',
+    wsConnect: 8082,
+    imgSrc: 'https://127.0.0.1:8081/image/car'
+  },
+  {
+    name: 'Мода',
+    wsConnect: 8083,
+    imgSrc: 'https://127.0.0.1:8081/image/fashion'
+  },
+  {
+    name: 'Здоровье',
+    wsConnect: 8084,
+    imgSrc: 'https://127.0.0.1:8081/image/health'
+  }
+];
+
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static("build"));
+}
+
+app.get("/api/food", (req, res) => {
+  res.json(chatData);
+});
+
+app.listen(app.get("port"), () => {
+  console.log(`server running at port${app.get("port")}`);
+});
+
+/*
 const Fastify = require('fastify');
 const WebSocketServer = new require('ws');
 const http2 = require('http2');
@@ -5,6 +45,8 @@ const fs = require('fs');
 
 const hostname = '127.0.0.1';
 const port = 8081;
+
+const PORT = process.env.PORT || 5000
 
 const fastify = Fastify({
   http2: true,
@@ -128,15 +170,16 @@ const wss2 = new WsChatServer(8083);
 const wss3 = new WsChatServer(8084);
 
 
-/*fs.readFile(`gallery/${ arr[arr.length-1] }.jpg`, (err, data) => {
+/!*fs.readFile(`gallery/${ arr[arr.length-1] }.jpg`, (err, data) => {
   pushStream.respond({ ':status': 200, 'content-type': 'image/jpg' });
   pushStream.end(data);
-});*/
+});*!/
 //const data = fs.readFileSync(`gallery/${ arr[arr.length-1] }.jpg`);
 //pushStream.respond({ ':status': 200, 'content-type': 'image/jpg' });
 //pushStream.end(data);
 //pushStream.respondWithFile(`./gallery/${ arr[arr.length-1] }.jpg`, { ':status': 200, 'Content-type': 'image/jpg' })
 //const data = fs.readFileSync(`gallery/${ arr[arr.length-1] }.jpg`);
 
-/*pushStream.respond({ ':status': 200, 'Content-Type': 'image/jpg' });
-pushStream.end(gallery[arr[arr.length-1]]);*/
+/!*pushStream.respond({ ':status': 200, 'Content-Type': 'image/jpg' });
+pushStream.end(gallery[arr[arr.length-1]]);*!/
+*/
