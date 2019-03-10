@@ -34,8 +34,11 @@ app.get("/api/roomList", (req, res) => {
 });
 
 app.get('/gallery/:name', async (request, res) => {
-  console.log( request.params.name );
-  res.sendFile(`/gallery/${ request.params.name }.jpg`)
+  console.log(__dirname);
+  const options = {
+    root: __dirname,
+  };
+  res.sendFile(`/gallery/${ request.params.name }.jpg`, options);
 });
 
 app.listen(app.get("port"), () => {
