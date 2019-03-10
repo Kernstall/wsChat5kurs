@@ -11,7 +11,7 @@ const chatData = [
   {
     name: 'Машины',
     wsConnect: 8082,
-    imgSrc: '/gallery/car'
+    imgSrc: '/gallery/Car'
   },
   {
     name: 'Мода',
@@ -34,7 +34,8 @@ app.get("/api/roomList", (req, res) => {
 });
 
 app.get('/gallery/:name', async (request, res) => {
-  res.sendFile(`gallery/${ request.params.name }.jpg`)
+  console.log( request.params.name );
+  res.sendFile(`/gallery/${ request.params.name }.jpg`)
 });
 
 app.listen(app.get("port"), () => {
