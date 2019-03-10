@@ -17,7 +17,7 @@ const styles = theme => ({
   },
   gridList: {
     width: '800px',
-    height: '600px',
+    height: '700',
   },
   icon: {
     color: 'rgba(255, 255, 255, 0.54)',
@@ -75,6 +75,9 @@ class RoomList extends React.Component {
             </GridListTile>
           ))}
         </GridList>
+        {/*<img src={ 'https://cdn.pixabay.com/photo/2016/06/18/17/42/image-1465348_960_720.jpg' } />
+        <img src={ 'https://www.w3schools.com/w3images/fjords.jpg' } />
+        <img src={ 'https://www.w3schools.com/w3images/fjords.jpg' } />*/}
       </div>
     );
   }

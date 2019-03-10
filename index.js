@@ -33,24 +33,34 @@ const chatData = [
   }
 ];
 
+const gallery = {
+  Car: fs.readFileSync('gallery/Car.jpg'),
+  fashion: fs.readFileSync('gallery/fashion.jpg'),
+  health: fs.readFileSync('gallery/health.jpg'),
+};
+
 fastify.get('/', async (request, reply) => {
-  for (const asset of ['/image/Car', '/image/fashion', '/image/health']) {
-    request.raw.stream.pushStream({':path': asset}, (err, pushStream) => {
-      if (err) {/*
-        console.log(err.message);*/
-        return
+  try {
+    if (request.raw.stream.pushAllowed) {
+      for (const asset of []) {//'/image/Car', '/image/fashion', '/image/health'
+        request.raw.stream.pushStream({':path': asset}, (err, pushStream, headers) => {
+          if (err) {
+            console.log(err);
+            return
+          }
+          const arr = asset.split('/');
+          pushStream.respondWithFile(`./gallery/${ arr[arr.length-1] }.jpg`,
+            { 'content-type': 'image/jpg' });
+        });
       }
-      console.log('wtf');
-      const arr = asset.split('/');
-      fs.readFile(`gallery/${ arr[arr.length-1] }.jpg`, (err, data) => {
-        console.log(err);
-        pushStream.respond({ ':status': 200, 'content-type': 'image/jpg' });
-        pushStream.end(data);
-      });
-    });
+    } else {
+      console.log('server push is not allowed by client');
+    }
+    reply.header('Access-Control-Allow-Origin', '*');
+    return chatData;
+  } catch (e) {
+    console.log(e);
   }
-  reply.header('Access-Control-Allow-Origin', '*');
-  return chatData;
 });
 
 fastify.get('/image/:name', async (request, reply) => {
@@ -70,6 +80,7 @@ fastify.listen(port, hostname, () => {
 class WsChatServer {
   constructor(port){
     this.clients = {};
+    this.messages = {};
     console.log('Starting ws server on port '+port);
     this.wss =  new WebSocketServer.Server({
       port: port
@@ -93,14 +104,7 @@ class WsChatServer {
           for (const key in clients) {
             clients[key].ws.send(JSON.stringify({ type: 'message', message: event.message, name: clients[id].name }));
           }
-        }/*
-
-        if(event.type === 'disconnect') {
-          for (const key in clients) {
-            clients[key].ws.send(JSON.stringify({ type: 'system', message: `Пользователь с ником ${ event.name } отключился`}));
-          }
-        }*/
-
+        }
       });
 
       ws.on('close', function() {
@@ -122,3 +126,17 @@ class WsChatServer {
 const wss1 = new WsChatServer(8082);
 const wss2 = new WsChatServer(8083);
 const wss3 = new WsChatServer(8084);
+
+
+/*fs.readFile(`gallery/${ arr[arr.length-1] }.jpg`, (err, data) => {
+  pushStream.respond({ ':status': 200, 'content-type': 'image/jpg' });
+  pushStream.end(data);
+});*/
+//const data = fs.readFileSync(`gallery/${ arr[arr.length-1] }.jpg`);
+//pushStream.respond({ ':status': 200, 'content-type': 'image/jpg' });
+//pushStream.end(data);
+//pushStream.respondWithFile(`./gallery/${ arr[arr.length-1] }.jpg`, { ':status': 200, 'Content-type': 'image/jpg' })
+//const data = fs.readFileSync(`gallery/${ arr[arr.length-1] }.jpg`);
+
+/*pushStream.respond({ ':status': 200, 'Content-Type': 'image/jpg' });
+pushStream.end(gallery[arr[arr.length-1]]);*/

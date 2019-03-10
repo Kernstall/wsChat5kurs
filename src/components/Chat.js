@@ -9,6 +9,7 @@ import Button from '@material-ui/core/Button';
 import Message from "./Message";
 import Paper from '@material-ui/core/Paper';
 import TextField from '@material-ui/core/TextField';
+import Upload from 'material-ui-upload/Upload';
 
 const styles = {
   textField: {
@@ -97,6 +98,8 @@ class Chat extends React.Component {
     this.setState({message: event.target.value });
   };
 
+  onFileLoad = (e, file) => console.log(e.target.result, file.name);
+
   render() {
     const { classes } = this.props;
     return (
@@ -133,6 +136,7 @@ class Chat extends React.Component {
             onChange={this.handleMessageChange}
             margin="normal"
           />
+          {/*<Upload label="Add" onFileLoad={this.onFileLoad}/>*/}
           <Button onClick={() => this.handleMessage()} color="primary" disabled={ this.state.message === '' }>
             Отправить
           </Button>
