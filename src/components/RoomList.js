@@ -40,7 +40,7 @@ class RoomList extends React.Component {
 
   componentWillMount(){
     const a = (obj) => {
-      fetch('https://127.0.0.1:8081/', {method: 'GET', mode: 'cors'})
+      fetch('/', {method: 'GET', mode: 'cors'})//https://127.0.0.1:8081
         .then(function (response) {
           return response.json();
         })
@@ -48,6 +48,9 @@ class RoomList extends React.Component {
           obj.setState({data});
         })
     };
+    /*fetch("/app", { method: 'GET' }).then(function (response) {
+      console.log(response);
+    });*/
     a(this);
   }
 

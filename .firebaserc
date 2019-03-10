@@ -1,5 +1,6 @@
 {
   "projects": {
-    "staging": "wschat"
+    "staging": "wschat",
+    "default": "wschat"
   }
 }
