@@ -29,12 +29,12 @@ if (process.env.NODE_ENV === "production") {
   app.use(express.static("build"));
 }
 
-app.get("/api/food", (req, res) => {
+app.get("/api/roomList", (req, res) => {
   res.json(chatData);
 });
 
 app.listen(app.get("port"), () => {
-  console.log(`server running at port${app.get("port")}`);
+  console.log(`server running at port ${app.get("port")}`);
 });
 
 /*
