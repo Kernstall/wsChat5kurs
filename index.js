@@ -46,8 +46,7 @@ app.get('/gallery/:name', async (request, res) => {
 //});
 
 fastify.register(require('fastify-static'), {
-  root: path.join(__dirname, 'public'),
-  prefix: '/public/', // optional: default '/'
+  root: `${__dirname}/build`,
 });
 
 fastify.listen(process.env.PORT, function (err, address) {
