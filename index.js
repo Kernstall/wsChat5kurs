@@ -2,7 +2,7 @@ const express = require("express");
 const fs = require("fs");
 const path = require('path');
 
-const fastify = require('fastify')();
+const fastify = require('fastify')({});
 
 
 const app = express();
@@ -54,6 +54,10 @@ fastify.register(require('fastify-static'), {
     process.exit(1);
   }
   console.log(`server listening on ${ address }`)
+});
+
+fastify.get('/foo', function (req, res) {
+  res.send('foo')
 });
 
 /*
