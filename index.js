@@ -2,7 +2,7 @@ const express = require("express");
 const fs = require("fs");
 const path = require('path');
 
-const fastify = require('fastify')({});
+//const fastify = require('fastify')({});
 
 
 const app = express();
@@ -42,11 +42,11 @@ app.get('/gallery/:name', async (request, res) => {
   res.sendFile(`/gallery/${ request.params.name }.jpg`, options);
 });
 
-//app.listen(app.get("port"), () => {
-//  console.log(`server running at port ${app.get("port")}`);
-//});
+app.listen(app.get("port"), () => {
+  console.log(`server running at port ${app.get("port")}`);
+});
 
-fastify.register(require('fastify-static'), {
+/*fastify.register(require('fastify-static'), {
   root: path.join(__dirname, '/build'),
 }).listen(process.env.PORT || 5000, function (err, address) {
   if (err) {
@@ -58,7 +58,7 @@ fastify.register(require('fastify-static'), {
 
 fastify.get('/foo', function (req, res) {
   res.send('foo')
-});
+});*/
 
 /*
 const Fastify = require('fastify');
