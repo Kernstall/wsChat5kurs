@@ -32,6 +32,10 @@ if (process.env.NODE_ENV === "production") {
   app.use(express.static("build"));
 }
 
+app.get("/", (req, res) => {
+  res.json({ hello: "world" });
+});
+
 app.get("/api/roomList", (req, res) => {
   res.json(chatData);
 });
