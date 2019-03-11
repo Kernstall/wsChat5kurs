@@ -43,7 +43,10 @@ app.get('/gallery/:name', async (request, res) => {
   res.sendFile(`/gallery/${ request.params.name }.jpg`, options);
 });
 
-const spdyOptions = {};
+const spdyOptions = {
+  key: fs.readFileSync(__dirname + '/conf/key.pem'),
+  cert:  fs.readFileSync(__dirname + '/conf/cert.pem')
+};
 
 spdy
   .createServer(spdyOptions, app)
