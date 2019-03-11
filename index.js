@@ -49,12 +49,12 @@ fastify.register(require('fastify-static'), {
   root: `${__dirname}/build`,
 });
 
-fastify.listen(process.env.PORT, function (err, address) {
+fastify.listen(process.env.PORT || 5000, function (err, address) {
   if (err) {
-    fastify.log.error(err);
+    console.log(err);
     process.exit(1);
   }
-  fastify.log.info(`server listening on ${address}`)
+  console.log(`server listening on ${ address }`)
 });
 
 /*
