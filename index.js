@@ -1,6 +1,7 @@
 const express = require("express");
 const fs = require("fs");
 const path = require('path');
+const spdy = require('spdy')
 
 //const fastify = require('fastify')({});
 
@@ -42,9 +43,22 @@ app.get('/gallery/:name', async (request, res) => {
   res.sendFile(`/gallery/${ request.params.name }.jpg`, options);
 });
 
-app.listen(app.get("port"), () => {
-  console.log(`server running at port ${app.get("port")}`);
-});
+const spdyOptions = {};
+
+spdy
+  .createServer(spdyOptions, app)
+  .listen(process.env.PORT || 3001, (error) => {
+    if (error) {
+      console.error(error);
+      return process.exit(1)
+    } else {
+      console.log('Listening on port: ' + process.env.PORT + '.');
+    }
+  });
+
+//app.listen(app.get("port"), () => {
+//  console.log(`server running at port ${app.get("port")}`);
+//});
 
 /*fastify.register(require('fastify-static'), {
   root: path.join(__dirname, '/build'),
