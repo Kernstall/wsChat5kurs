@@ -1,5 +1,6 @@
 const express = require("express");
 const fs = require("fs");
+const path = require('path');
 
 const fastify = require('fastify')();
 
@@ -46,10 +47,8 @@ app.get('/gallery/:name', async (request, res) => {
 //});
 
 fastify.register(require('fastify-static'), {
-  root: `${__dirname}/build`,
-});
-
-fastify.listen(process.env.PORT || 5000, function (err, address) {
+  root: path.join(__dirname, '/build'),
+}).listen(process.env.PORT || 5000, function (err, address) {
   if (err) {
     console.log(err);
     process.exit(1);
