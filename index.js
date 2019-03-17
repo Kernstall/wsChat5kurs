@@ -47,11 +47,12 @@ app.get('/gallery/:name', async (request, res) => {
   res.sendFile(`/gallery/${ request.params.name }.jpg`, options);
 });
 
-const spdyOptions = {
-  key: fs.readFileSync(__dirname + '/conf/key.pem'),
-  cert:  fs.readFileSync(__dirname + '/conf/cert.pem')
-};
+//const spdyOptions = {
+//  key: fs.readFileSync(__dirname + '/conf/key.pem'),
+//  cert:  fs.readFileSync(__dirname + '/conf/cert.pem')
+//};
 
+/*
 spdy
   .createServer(spdyOptions, app)
   .listen(process.env.PORT || 3001, (error) => {
@@ -62,10 +63,11 @@ spdy
       console.log('Listening on port: ' + process.env.PORT + '.');
     }
   });
+*/
 
-//app.listen(app.get("port"), () => {
-//  console.log(`server running at port ${app.get("port")}`);
-//});
+app.listen(app.get("port"), () => {
+  console.log(`server running at port ${app.get("port")}`);
+});
 
 /*fastify.register(require('fastify-static'), {
   root: path.join(__dirname, '/build'),
