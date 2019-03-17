@@ -1,16 +1,14 @@
-var finalhandler = require('finalhandler')
-var http         = require('http')
-var Router       = require('router')
+const express = require("express");
 
-var router = Router()
+const app = express();
 
-// Add this for Let's Encrypt ACME challenge validation
-router.get('/.well-known/acme-challenge/:str', function (req, res) {
-  res.send(process.env.LETS_ENCRYPT_CHALLENGE);
-})
+app.set("port", process.env.PORT || 3001);
 
-var server = http.createServer(function(req, res) {
-  router(req, res, finalhandler(req, res))
-})
+app.get("*", (req, res) => {
+  console.log('dick');
+  res.send('KOpzpLPfaDQKv9S8-YR3HrJAKRZdx4MNlup_mHwMRtY.gEOVzr172mYkmCiwzRjAGd_rrxPjzSPa-bR5Gek6BIk');
+});
 
-server.listen(process.env.PORT || 3001)
+app.listen(app.get("port"), () => {
+  console.log(`server running at port ${app.get("port")}`);
+});
