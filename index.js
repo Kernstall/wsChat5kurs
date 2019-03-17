@@ -47,8 +47,8 @@ app.get('/gallery/:name', async (request, res) => {
   res.sendFile(`/gallery/${ request.params.name }.jpg`, options);
 });
 
-app.get('/.well-known/acme-challenge/pnKgD3mqg3G9qDk-rV71pUIC0sVbAmfWW7reW3jdGAo', function(req, res) {
-  res.send('pnKgD3mqg3G9qDk-rV71pUIC0sVbAmfWW7reW3jdGAo.gEOVzr172mYkmCiwzRjAGd_rrxPjzSPa-bR5Gek6BIk');
+app.get('/.well-known/acme-challenge/3Z9JZZgIoMl0r133XHLcNTQNG55jDazpxWguXwrYMyQ', function(req, res) {
+  res.sendFile('conf/check');
 });
 
 /*const spdyOptions = {
