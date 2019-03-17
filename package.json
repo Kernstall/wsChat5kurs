@@ -6,7 +6,8 @@
     "live-server": "^1.2.0"
   },
   "scripts": {
-    "start": "node node_modules/.bin/http-server",
+    "start": "index.js",
+    //"start": "node node_modules/.bin/http-server",
     "local": "node_modules/.bin/live-server --port=8080"
   }
 }
