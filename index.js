@@ -46,10 +46,10 @@ app.get('/gallery/:name', async (request, res) => {
   };
   res.sendFile(`/gallery/${ request.params.name }.jpg`, options);
 });
-
+/*
 app.get('/.well-known/acme-challenge/3Z9JZZgIoMl0r133XHLcNTQNG55jDazpxWguXwrYMyQ', function(req, res) {
   res.sendFile('conf/check');
-});
+});*/
 
 /*const spdyOptions = {
   key: fs.readFileSync(__dirname + '/conf/key.pem'),
