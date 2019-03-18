@@ -32,9 +32,9 @@ if (process.env.NODE_ENV === "production") {
   app.use(express.static("build"));
 }
 
-app.get("/", (req, res) => {
+/*app.get("/", (req, res) => {
   res.json({ hello: "world" });
-});
+});*/
 
 app.get("/api/roomList", (req, res) => {
   res.json(chatData);
@@ -46,14 +46,10 @@ app.get('/gallery/:name', async (request, res) => {
   };
   res.sendFile(`/gallery/${ request.params.name }.jpg`, options);
 });
-/*
-app.get('/.well-known/acme-challenge/3Z9JZZgIoMl0r133XHLcNTQNG55jDazpxWguXwrYMyQ', function(req, res) {
-  res.sendFile('conf/check');
-});*/
 
-/*const spdyOptions = {
-  key: fs.readFileSync(__dirname + '/conf/key.pem'),
-  cert:  fs.readFileSync(__dirname + '/conf/cert.pem')
+const spdyOptions = {
+  key: fs.readFileSync(__dirname + '/conf/privkey1.pem'),
+  cert:  fs.readFileSync(__dirname + '/conf/fullchain1.pem')
 };
 
 spdy
@@ -65,11 +61,11 @@ spdy
     } else {
       console.log('Listening on port: ' + process.env.PORT + '.');
     }
-  });*/
+  });
 
-app.listen(app.get("port"), () => {
+/*app.listen(app.get("port"), () => {
   console.log(`server running at port ${app.get("port")}`);
-});
+});*/
 
 /*fastify.register(require('fastify-static'), {
   root: path.join(__dirname, '/build'),
