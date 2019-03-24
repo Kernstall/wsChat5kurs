@@ -1,5 +1,6 @@
 const express = require("express");
 const fs = require("fs");
+//import * as WebSocket from 'ws';
 //const path = require('path');
 const spdy = require('spdy');
 
@@ -7,6 +8,7 @@ const spdy = require('spdy');
 
 
 const app = express();
+const expressWs = require('express-ws')(app);
 
 const chatData = [
   {
@@ -25,6 +27,8 @@ const chatData = [
     imgSrc: '/gallery/health'
   }
 ];
+
+const wss = new WebSocket.Server({ server });
 
 app.set("port", process.env.PORT || 3001);
 
@@ -47,6 +51,13 @@ app.get('/gallery/:name', async (request, res) => {
   res.sendFile(`/gallery/${ request.params.name }.jpg`, options);
 });
 
+app.ws('/websocket', function(ws, req) {
+  ws.on('message', function(msg) {
+    console.log(msg);
+  });
+  console.log('socket', req.testing);
+});
+
 /*const spdyOptions = {
   key: fs.readFileSync(__dirname + '/conf/privkey1.pem'),
   cert:  fs.readFileSync(__dirname + '/conf/fullchain1.pem'),
@@ -63,6 +74,7 @@ app.get('/gallery/:name', async (request, res) => {
 };*/
 
 console.log(process.env.NODE_ENV);
+console.log(process.env.PORT);
 
 /*spdy
   .createServer(spdyOptions, app)
