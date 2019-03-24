@@ -32,9 +32,9 @@ if (process.env.NODE_ENV === "production") {
   app.use(express.static("build"));
 }
 
-/*app.get("/", (req, res) => {
+app.get("/", (req, res) => {
   res.json({ hello: "world" });
-});*/
+});
 
 app.get("/api/roomList", (req, res) => {
   res.json(chatData);
@@ -52,11 +52,14 @@ const spdyOptions = {
   cert:  fs.readFileSync(__dirname + '/conf/fullchain1.pem')
 };
 
+console.log(process.env.PORT);
+
 spdy
   .createServer(spdyOptions, app)
   .listen(process.env.PORT || 3001, (error) => {
     if (error) {
       console.error(error);
+      console.log.error(error);
       return process.exit(1)
     } else {
       console.log('spdy Listening on port: ' + process.env.PORT + '.');
