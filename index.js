@@ -49,7 +49,17 @@ app.get('/gallery/:name', async (request, res) => {
 
 const spdyOptions = {
   key: fs.readFileSync(__dirname + '/conf/privkey1.pem'),
-  cert:  fs.readFileSync(__dirname + '/conf/fullchain1.pem')
+  cert:  fs.readFileSync(__dirname + '/conf/fullchain1.pem'),
+  spdy: {
+    protocols: [ 'h2', 'spdy/3.1', 'http/1.1' ],
+    plain: false,
+  connection: {
+  windowSize: 1024 * 1024, // Server's window size
+
+    // **optional** if true - server will send 3.1 frames on 3.0 *plain* spdy
+    autoSpdy31: false
+    }
+  }
 };
 
 console.log(process.env.PORT);
