@@ -59,7 +59,7 @@ spdy
       console.error(error);
       return process.exit(1)
     } else {
-      console.log('Listening on port: ' + process.env.PORT + '.');
+      console.log('spdy Listening on port: ' + process.env.PORT + '.');
     }
   });
 
