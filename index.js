@@ -1,6 +1,6 @@
 const express = require("express");
 const fs = require("fs");
-import * as WebSocket from 'ws';
+//import * as WebSocket from 'ws';
 //const path = require('path');
 const spdy = require('spdy');
 
@@ -28,7 +28,7 @@ const chatData = [
   }
 ];
 
-const wss = new WebSocket.Server({ server });
+//const wss = new WebSocket.Server({ server });
 
 app.set("port", process.env.PORT || 3001);
 
