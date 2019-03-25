@@ -14,17 +14,20 @@ const chatData = [
   {
     name: 'Машины',
     wsConnect: 8082,
-    imgSrc: '/gallery/Car'
+    imgSrc: '/gallery/Car',
+    uuid: 'car'
   },
   {
     name: 'Мода',
     wsConnect: 8083,
-    imgSrc: '/gallery/fashion'
+    imgSrc: '/gallery/fashion',
+    uuid: 'fashion'
   },
   {
     name: 'Здоровье',
     wsConnect: 8084,
-    imgSrc: '/gallery/health'
+    imgSrc: '/gallery/health',
+    uuid: 'health'
   }
 ];
 
@@ -51,11 +54,13 @@ app.get('/gallery/:name', async (request, res) => {
   res.sendFile(`/gallery/${ request.params.name }.jpg`, options);
 });
 
-app.ws('/websocket', function(ws, req) {
-  ws.on('message', function(msg) {
+app.ws('/websocket/:uuid', function(wss, req) {
+  wss.on('message', function(msg) {
     console.log(msg);
   });
-  console.log('socket', req.testing);
+  console.log(req.params.uuid);
+
+
 });
 
 /*const spdyOptions = {
