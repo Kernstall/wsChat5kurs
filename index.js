@@ -67,11 +67,11 @@ app.get('/gallery/:name', async (request, res) => {
 
 app.ws('/websocket/:uuid', function(wss, req) {
 
-  if( rooms[req.params.url] ) {
-    rooms[req.params.url].addConnection(wss);
+  if( rooms[req.params.uuid] ) {
+    rooms[req.params.uuid].addConnection(wss);
   } else {
-    rooms[req.params.url] = new WsChatRoom(req.params.url);
-    rooms[req.params.url].addConnection(wss);
+    rooms[req.params.uuid] = new WsChatRoom(req.params.uuid);
+    rooms[req.params.uuid].addConnection(wss);
   }
 });
 
