@@ -4,8 +4,25 @@ const fs = require("fs");
 //const path = require('path');
 const spdy = require('spdy');
 
-//const fastify = require('fastify')({});
+class WsChatRoom {
+  constructor(name) {
+    this.connections = [];
+    this.messages = [];
 
+    console.log('Initializing ws room: ' + name);
+  }
+  addConnection(wss) {
+    this.connections.add(wss);
+    wss.on('message', function(msg) {
+      console.log(msg);
+    });
+  }
+}
+
+const rooms = {};
+rooms.car = new WsChatRoom('car');
+rooms.fashion = new WsChatRoom('fashion');
+rooms.health = new WsChatRoom('health');
 
 const app = express();
 const expressWs = require('express-ws')(app);
@@ -31,17 +48,11 @@ const chatData = [
   }
 ];
 
-//const wss = new WebSocket.Server({ server });
-
 app.set("port", process.env.PORT || 3001);
 
 if (process.env.NODE_ENV === "production") {
   app.use(express.static("build"));
 }
-
-/*app.get("/", (req, res) => {
-  res.json({ hello: "world" });
-});*/
 
 app.get("/api/roomList", (req, res) => {
   res.json(chatData);
@@ -55,43 +66,17 @@ app.get('/gallery/:name', async (request, res) => {
 });
 
 app.ws('/websocket/:uuid', function(wss, req) {
-  wss.on('message', function(msg) {
-    console.log(msg);
-  });
-  console.log(req.params.uuid);
 
-
-});
-
-/*const spdyOptions = {
-  key: fs.readFileSync(__dirname + '/conf/privkey1.pem'),
-  cert:  fs.readFileSync(__dirname + '/conf/fullchain1.pem'),
-  spdy: {
-    protocols: [ 'h2', 'spdy/3.1', 'http/1.1' ],
-    plain: false,
-  connection: {
-  windowSize: 1024 * 1024, // Server's window size
-
-    // **optional** if true - server will send 3.1 frames on 3.0 *plain* spdy
-    autoSpdy31: false
-    }
+  if( rooms[req.params.url] ) {
+    rooms[req.params.url].addConnection(wss);
+  } else {
+    rooms[req.params.url] = new WsChatRoom(req.params.url);
+    rooms[req.params.url].addConnection(wss);
   }
-};*/
+});
 
 console.log(process.env.NODE_ENV);
 console.log(process.env.PORT);
-
-/*spdy
-  .createServer(spdyOptions, app)
-  .listen(process.env.PORT || 3001, (error) => {
-    if (error) {
-      console.error(error);
-      console.log.error(error);
-      return process.exit(1)
-    } else {
-      console.log('spdy Listening on port: ' + process.env.PORT + '.');
-    }
-  });*/
 
 app.listen(app.get("port"), () => {
   console.log(`server running at port ${app.get("port")}`);
