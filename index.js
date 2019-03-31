@@ -8,11 +8,13 @@ class WsChatRoom {
   constructor(name) {
     this.connections = [];
     this.messages = [];
+    this.name = name;
 
     console.log('Initializing ws room: ' + name);
   }
   addConnection(wss) {
-    this.connections.add(wss);
+    console.log('Connection added on '+this.name);
+    this.connections.push(wss);
     wss.on('message', function(msg) {
       console.log(msg);
     });
