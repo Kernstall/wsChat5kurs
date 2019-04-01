@@ -4,6 +4,54 @@ const fs = require("fs");
 //const path = require('path');
 const spdy = require('spdy');
 
+/*
+class WsChatServer {
+  constructor(port){
+    this.clients = {};
+    this.messages = {};
+    console.log('Starting ws server on port '+port);
+    this.wss =  new WebSocketServer.Server({
+      port: port
+    });
+
+    this.wss.on('connection', function(ws) {
+
+      const id = Math.random();
+      this.clients[id] = { ws, name: '' };
+      const clients = this.clients;
+      ws.on('message', function(message) {
+        const event = JSON.parse(message);
+        if(event.type === 'greetings') {
+          for (const key in clients) {
+            clients[id].name = event.name;
+            clients[key].ws.send(JSON.stringify({ type: 'system', message: `Пользователь с ником ${ clients[id].name } присоединился`}));
+          }
+        }
+
+        if(event.type === 'message') {
+          for (const key in clients) {
+            clients[key].ws.send(JSON.stringify({ type: 'message', message: event.message, name: clients[id].name }));
+          }
+        }
+      });
+
+      ws.on('close', function() {
+        const name = clients[id].name;
+        delete clients[id];
+        for (const key in clients) {
+          try {
+            clients[key].ws.send(JSON.stringify({ type: 'system', message: `Пользователь с ником ${ name } отключился`}));
+          } catch (e) {
+          }
+        }
+      });
+    });
+
+
+  }
+}
+ */
+
 class WsChatRoom {
   constructor(name) {
     this.connections = [];
@@ -14,9 +62,25 @@ class WsChatRoom {
   }
   addConnection(wss) {
     console.log('Connection added on '+this.name);
-    this.connections.push(wss);
+    const id = Math.random();
+    this.connections.push({ wss, name: '', id });
     wss.on('message', function(msg) {
-      console.log(msg);
+      const event = JSON.parse(message);
+      const myConnection = this.connections.find(elem => elem.id === id);
+      if(event.type === 'greetings') {
+        if (myConnection) {
+          myConnection.name = event.name;
+        }
+        for (const connection in this.connections) {
+          connection.wss.send(JSON.stringify({ type: 'system', message: `Пользователь с ником ${ event.name } присоединился`}));
+        }
+      }
+
+      if(event.type === 'message') {
+        for (const connection in this.connections) {
+          connection.wss.send(JSON.stringify({ type: 'message', message: event.message, name: myConnection ? myConnection.name : 'Неизвестный' }));
+        }
+      }
     });
   }
 }
