@@ -40,7 +40,7 @@ class RoomList extends React.Component {
 
   componentWillMount(){
     const a = (obj) => {
-      fetch('/api/roomList', { method: 'GET' })//https://127.0.0.1:8081
+      fetch('/api/roomList', { method: 'GET' })//https://127.0.0.1:3001
         .then(function (response) {
           return response.json();
         })
@@ -48,12 +48,6 @@ class RoomList extends React.Component {
           obj.setState({data});
         })
     };
-    /*fetch("/app", { method: 'GET' }).then(function (response) {
-      console.log(response);
-    });*/
-    /*fetch("/app", { method: 'GET' }).then(function (response) {
-      console.log(response);
-    });*/
     a(this);
   }
 
@@ -73,7 +67,7 @@ class RoomList extends React.Component {
                   title: classes.title,
                 }}
                 actionIcon={
-                  <IconButton onClick = { () => window.location.replace(`/chat/${ tile.wsConnect }`) }>
+                  <IconButton onClick = { () => window.location.replace(`/chat/${ tile.uuid }`) }>
                     <MessageIcon className={classes.icon} />
                   </IconButton>
                 }

@@ -116,9 +116,11 @@ const chatData = [
 
 app.set("port", process.env.PORT || 3001);
 
-if (process.env.NODE_ENV === "production") {
+/*if (process.env.NODE_ENV === "production") {
   app.use(express.static("build"));
-}
+}*/
+
+app.use(express.static("build"));
 
 app.get("/api/roomList", (req, res) => {
   res.json(chatData);
