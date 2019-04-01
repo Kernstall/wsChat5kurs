@@ -1,7 +1,7 @@
 const express = require("express");
 const fs = require("fs");
 //import * as WebSocket from 'ws';
-//const path = require('path');
+const path = require('path');
 const spdy = require('spdy');
 
 /*
@@ -145,6 +145,9 @@ app.ws('/websocket/:uuid', function(wss, req) {
 
 console.log(process.env.NODE_ENV);
 console.log(process.env.PORT);
+
+// Express will serve up the front-end index.html file if it doesn't recognize the route
+app.get("*", (req, res) => res.sendFile(path.resolve("build", "index.html")));
 
 app.listen(app.get("port"), () => {
   console.log(`server running at port ${app.get("port")}`);

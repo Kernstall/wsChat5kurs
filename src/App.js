@@ -13,7 +13,7 @@ class App extends React.Component {
         <Header />
         <Switch>
           <Route exact path='/' component={RoomList}/>
-          <Route exact path='/chat/:port' component={Chat}/>
+          <Route path='/chat/:port' component={Chat}/>
         </Switch>
       </div>
     );
