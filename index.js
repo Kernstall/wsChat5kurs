@@ -66,18 +66,18 @@ class WsChatRoom {
     this.connections.push({ wss, name: '', id });
     wss.on('message', (msg) => {
       const event = JSON.parse(msg);
-      const myConnection = this.connections.find(elem => elem.id === id);
+      const myConnection = this.connections[this.connections.find(elem => elem.id === id)];
       if(event.type === 'greetings') {
-        console.log(this.connections);
+        /*console.log(this.connections);
         for (const connection in this.connections) {
           console.log(connection);
-        }
-        /*if (myConnection) {
+        }*/
+        if (myConnection) {
           myConnection.name = event.name;
         }
         for (const connection in this.connections) {
           connection.wss.send(JSON.stringify({ type: 'system', message: `Пользователь с ником ${ event.name } присоединился`}));
-        }*/
+        }
       }
 
       if(event.type === 'message') {
