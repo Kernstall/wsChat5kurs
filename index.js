@@ -64,7 +64,7 @@ class WsChatRoom {
     console.log('Connection added on '+this.name);
     const id = Math.random();
     this.connections.push({ wss, name: '', id });
-    wss.on('message', function(msg) {
+    wss.on('message', (msg) => {
       const event = JSON.parse(msg);
       const myConnection = this.connections.find(elem => elem.id === id);
       if(event.type === 'greetings') {
