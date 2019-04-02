@@ -1,56 +1,8 @@
 const express = require("express");
 const fs = require("fs");
-//import * as WebSocket from 'ws';
+const WebSocket = require('ws');
 const path = require('path');
 const spdy = require('spdy');
-
-/*
-class WsChatServer {
-  constructor(port){
-    this.clients = {};
-    this.messages = {};
-    console.log('Starting ws server on port '+port);
-    this.wss =  new WebSocketServer.Server({
-      port: port
-    });
-
-    this.wss.on('connection', function(ws) {
-
-      const id = Math.random();
-      this.clients[id] = { ws, name: '' };
-      const clients = this.clients;
-      ws.on('message', function(message) {
-        const event = JSON.parse(message);
-        if(event.type === 'greetings') {
-          for (const key in clients) {
-            clients[id].name = event.name;
-            clients[key].ws.send(JSON.stringify({ type: 'system', message: `Пользователь с ником ${ clients[id].name } присоединился`}));
-          }
-        }
-
-        if(event.type === 'message') {
-          for (const key in clients) {
-            clients[key].ws.send(JSON.stringify({ type: 'message', message: event.message, name: clients[id].name }));
-          }
-        }
-      });
-
-      ws.on('close', function() {
-        const name = clients[id].name;
-        delete clients[id];
-        for (const key in clients) {
-          try {
-            clients[key].ws.send(JSON.stringify({ type: 'system', message: `Пользователь с ником ${ name } отключился`}));
-          } catch (e) {
-          }
-        }
-      });
-    });
-
-
-  }
-}
- */
 
 class WsChatRoom {
   constructor(name) {
@@ -58,31 +10,59 @@ class WsChatRoom {
     this.messages = [];
     this.name = name;
 
+    const interval = setInterval( () => {
+      /*console.log('PingCheck');*/
+      this.connections.forEach((connection) => {
+        try{
+          if (connection.isAlive === false || connection.wss.readyState === WebSocket.CLOSED){
+            /*console.log('Connection terminated');*/
+            const index = this.connections.findIndex((elem) => elem === connection);
+            if(index >= 0 ) this.connections.splice(index, index);
+            return connection.wss.terminate();
+          }
+          connection.isAlive = false;
+          connection.wss.ping();
+        } catch(e) {
+          console.error(e);
+        }
+      });
+    }, 30000);
+
     console.log('Initializing ws room: ' + name);
   }
   addConnection(wss) {
     console.log('Connection added on '+this.name);
     const id = Math.random();
-    this.connections.push({ wss, name: '', id });
+    const connection = { wss, name: '', id, isAlive: true };
+    this.connections.push(connection);
+    wss.on('pong', () => { /*console.log('pong');*/ connection.isAlive = true });
     wss.on('message', (msg) => {
-      const event = JSON.parse(msg);
-      //const myConnection = this.connections[this.connections.find(elem => elem.id === id)];
-      const myConnection = this.connections.find(elem => elem.id === id);
-      if(event.type === 'greetings') {
+      try {
+        const event = JSON.parse(msg);
+        //const myConnection = this.connections[this.connections.find(elem => elem.id === id)];
+        const myConnection = this.connections.find(elem => elem.id === id);
+        if(event.type === 'greetings') {
 
-        if (myConnection) {
-          myConnection.name = event.name;
+          if (myConnection) {
+            myConnection.name = event.name;
+          }
+          this.connections.forEach(connection => {
+            if (connection.wss.readyState === WebSocket.OPEN) {
+              connection.wss.send(JSON.stringify({ type: 'system', message: `Пользователь с ником ${ event.name } присоединился`}));
+            }
+          })
         }
-        this.connections.forEach(connection => {
-          connection.wss.send(JSON.stringify({ type: 'system', message: `Пользователь с ником ${ event.name } присоединился`}));
-        })
-      }
 
-      if(event.type === 'message') {
-        this.connections.forEach(connection => {
-          connection.wss.send(JSON.stringify({ type: 'message', message: event.message, name: myConnection ? myConnection.name : 'Неизвестный' }));
-        });
+        if(event.type === 'message') {
+          this.connections.forEach(connection => {
+            if (connection.wss.readyState === WebSocket.OPEN) {
+              connection.wss.send(JSON.stringify({ type: 'message', message: event.message, name: myConnection ? myConnection.name : 'Неизвестный' }));
+            }
+          });
 
+        }
+      } catch(e){
+        console.error(e);
       }
     });
   }
