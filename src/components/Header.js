@@ -38,7 +38,7 @@ function Header(props) {
             {/*<MenuIcon />*/}
           </IconButton>
             <Typography variant="h6" color="inherit" className={classes.grow}>
-              <span className={ classes.pointer } onClick={ () => window.location.replace('/') } >wsChat</span>
+              <span className={ classes.pointer } onClick={ () => window.location.replace('/#/') } >wsChat</span>
             </Typography>{/*
           <Button color="inherit">Login</Button>*/}
         </Toolbar>

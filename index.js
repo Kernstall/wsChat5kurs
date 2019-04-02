@@ -69,28 +69,20 @@ class WsChatRoom {
       //const myConnection = this.connections[this.connections.find(elem => elem.id === id)];
       const myConnection = this.connections.find(elem => elem.id === id);
       if(event.type === 'greetings') {
-        /*console.log(this.connections);
-        for (const connection in this.connections) {
-          console.log(connection);
-        }*/
+
         if (myConnection) {
           myConnection.name = event.name;
         }
         this.connections.forEach(connection => {
           connection.wss.send(JSON.stringify({ type: 'system', message: `Пользователь с ником ${ event.name } присоединился`}));
         })
-        /*for (const connection in this.connections) {
-          connection.wss.send(JSON.stringify({ type: 'system', message: `Пользователь с ником ${ event.name } присоединился`}));
-        }*/
       }
 
       if(event.type === 'message') {
         this.connections.forEach(connection => {
           connection.wss.send(JSON.stringify({ type: 'message', message: event.message, name: myConnection ? myConnection.name : 'Неизвестный' }));
         });
-        /*for (const connection in this.connections) {
-          connection.wss.send(JSON.stringify({ type: 'message', message: event.message, name: myConnection ? myConnection.name : 'Неизвестный' }));
-        }*/
+
       }
     });
   }
@@ -159,6 +151,10 @@ console.log(process.env.PORT);
 
 // Express will serve up the front-end index.html file if it doesn't recognize the route
 app.get("*", (req, res) => res.sendFile(path.resolve("build", "index.html")));
+/*
+app.get('*', function (request, response){
+  response.sendFile(path.resolve(__dirname, 'public', 'index.html'))
+})*/
 
 app.listen(app.get("port"), () => {
   console.log(`server running at port ${app.get("port")}`);

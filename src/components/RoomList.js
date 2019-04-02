@@ -67,7 +67,7 @@ class RoomList extends React.Component {
                   title: classes.title,
                 }}
                 actionIcon={
-                  <IconButton onClick = { () => window.location.replace(`/chat/${ tile.uuid }`) }>
+                  <IconButton onClick = { () => window.location.replace(`/#/chat/${ tile.uuid }`) }>
                     <MessageIcon className={classes.icon} />
                   </IconButton>
                 }
