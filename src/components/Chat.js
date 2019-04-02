@@ -11,33 +11,15 @@ import Paper from '@material-ui/core/Paper';
 import TextField from '@material-ui/core/TextField';
 import Upload from 'material-ui-upload/Upload';
 
+
+import style from './chat.module.css';
+
 const styles = {
   textField: {
     width: 200,
   },
   messageField: {
     width: 'fill-available'
-  },
-  container: {
-    width: 700,
-    margin: 'auto',
-    'border-radius': 0,
-    'height': '665px',
-    overflowY: 'auto',
-    overflowX: 'hidden'
-  },
-  bottom: {
-    position: 'absolute',
-    bottom: 0,
-    width: 700,
-    border: '1px solid #AAAAAA',
-    display: 'flex',
-
-  },
-  map: {
-    '&$last-child': {
-      'background-color': 'red',
-    },
   },
   paper: {
     borderRadius: 0
@@ -110,7 +92,7 @@ class Chat extends React.Component {
   render() {
     const { classes } = this.props;
     return (
-      <Paper className={ classes.container }>
+      <div className={ style.container }>
         <div className={ classes.map }>
         {this.state.messageList.map((message, index) => <Message key={index} event={ message }/> )}
         </div>
@@ -135,7 +117,7 @@ class Chat extends React.Component {
             </Button>
           </DialogActions>
         </Dialog>
-        <div className={ classes.bottom }>
+        <div className={ style.bottom }>
           <TextField
             id="input"
             className={classes.messageField}
@@ -171,7 +153,7 @@ class Chat extends React.Component {
             </Button>
           </label>
         </div>
-      </Paper>
+      </div>
     );
   }
 }

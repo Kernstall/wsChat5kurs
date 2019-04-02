@@ -2,7 +2,24 @@ const express = require("express");
 const fs = require("fs");
 const WebSocket = require('ws');
 const path = require('path');
-const spdy = require('spdy');
+const atob = require('atob');
+const toStream = require('blob-to-stream');
+var base64ToImage = require('base64-to-image');
+
+const Discord = require('discord.js');
+const client = new Discord.Client();
+
+client.on('ready', () => {
+  console.log(`Logged in as ${client.user.tag}!`);
+});
+
+client.on('message', msg => {/*
+  if(msg.user.bot) return console.log('bot message');*/
+  //if (msg.guild) console.log(client.channels);
+  /*msg.reply('Pong!');*/
+});
+
+client.login('NTYyNjcwNTE3NDgwNDU2MTk0.XKOO_w.LGMf1Fbk7YmAHgwB2OYqDCB5SZw');
 
 class WsChatRoom {
   constructor(name) {
@@ -50,7 +67,12 @@ class WsChatRoom {
             if (connection.wss.readyState === WebSocket.OPEN) {
               connection.wss.send(JSON.stringify({ type: 'system', message: `Пользователь с ником ${ event.name } присоединился`}));
             }
-          })
+          });
+          client.channels.forEach(elem => {
+            if(elem.type === 'text') {
+              elem.send(`Пользователь с ником ${ event.name } присоединился`);
+            }
+          });
         }
 
         if(event.type === 'message') {
@@ -59,7 +81,11 @@ class WsChatRoom {
               connection.wss.send(JSON.stringify({ type: 'message', message: event.message, name: myConnection ? myConnection.name : 'Неизвестный' }));
             }
           });
-
+          client.channels.forEach(elem => {
+            if(elem.type === 'text') {
+              elem.send(`${ myConnection.name }: ${ event.message }`);
+            }
+          });
         }
 
         if(event.type === 'image') {
@@ -68,7 +94,17 @@ class WsChatRoom {
               connection.wss.send(JSON.stringify({ type: 'image', message: event.message, name: myConnection ? myConnection.name : 'Неизвестный' }));
             }
           });
-
+          const { fileName } = base64ToImage(event.message, './discordImg/');
+          setTimeout(()=>{
+            const buf = fs.readFileSync(path.resolve(__dirname, 'discordImg', fileName));
+            const attach = new Discord.Attachment(buf);
+            client.channels.forEach(elem => {
+              if(elem.type === 'text') {
+                elem.send(attach);
+              }
+            });
+            fs.unlinkSync(path.resolve(__dirname, 'discordImg', fileName));
+          }, 1000);
         }
       } catch(e){
         console.error(e);

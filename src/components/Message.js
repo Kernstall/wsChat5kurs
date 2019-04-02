@@ -11,6 +11,16 @@ const styles = theme => ({
     paddingBottom: theme.spacing.unit * 2,
     'border-radius': 0,
   },
+  root2: {
+    ...theme.mixins.gutters(),
+    paddingTop: theme.spacing.unit * 2,
+    paddingBottom: theme.spacing.unit * 2,
+    maxWidth: '100%',
+    'border-radius': 0,
+  },
+  img: {
+    maxWidth: '100%'
+  }
 });
 
 function Message(props) {
@@ -26,11 +36,11 @@ function Message(props) {
           {event.message}
         </Typography>
       </Paper> : event.type === 'image'?
-          <Paper className={classes.root} elevation={1}>
+          <Paper className={classes.root2} elevation={1}>
             <Typography variant="h5" component="h3" align="left">
               {event.name}
             </Typography>
-            <img src={ event.message }/>
+            <img className={classes.img} src={ event.message }/>
           </Paper>
           :
           event.message}

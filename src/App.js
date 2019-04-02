@@ -11,10 +11,12 @@ class App extends React.Component {
     return (
       <div className="App">
         <Header />
-        <Switch>
-          <Route exact path='/' component={RoomList}/>
-          <Route path='/chat/:port' component={Chat}/>
-        </Switch>
+        <div style={ { height: window.innerHeight - 200 } }>
+          <Switch>
+            <Route exact path='/' component={RoomList}/>
+            <Route path='/chat/:port' component={Chat}/>
+          </Switch>
+        </div>
       </div>
     );
   }
