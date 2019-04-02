@@ -25,7 +25,15 @@ function Message(props) {
         <Typography component="p" align="left">
           {event.message}
         </Typography>
-      </Paper> : event.message}
+      </Paper> : event.type === 'image'?
+          <Paper className={classes.root} elevation={1}>
+            <Typography variant="h5" component="h3" align="left">
+              {event.name}
+            </Typography>
+            <img src={ event.message }/>
+          </Paper>
+          :
+          event.message}
     </div>
   );
 }

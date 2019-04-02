@@ -41,6 +41,12 @@ const styles = {
   },
   paper: {
     borderRadius: 0
+  },
+  imgInput: {
+    display: 'none',
+  },
+  uploadButton: {
+    minHeight: '64px',
   }
 };
 
@@ -141,6 +147,29 @@ class Chat extends React.Component {
           <Button onClick={() => this.handleMessage()} color="primary" disabled={ this.state.message === '' }>
             Отправить
           </Button>
+          <input
+              accept="image/*"
+              className={classes.imgInput}
+              id="contained-button-file"
+              multiple
+              type="file"
+              onChange={ (event) => {
+                if(event.target.files.length)
+                {
+                  const FR = new FileReader();
+                  FR.readAsDataURL(event.target.files[0]);
+                  FR.onload = () => {
+                    //console.log(<img src={FR.result} />);
+                    this.state.ws.send(JSON.stringify({type: 'image', name: this.state.name, message: FR.result }));
+                  }
+                }
+              }}
+          />
+          <label htmlFor="contained-button-file">
+            <Button color="primary" component="span" className={classes.uploadButton}>
+              Upload
+            </Button>
+          </label>
         </div>
       </Paper>
     );

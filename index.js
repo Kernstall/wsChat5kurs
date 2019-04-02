@@ -61,6 +61,15 @@ class WsChatRoom {
           });
 
         }
+
+        if(event.type === 'image') {
+          this.connections.forEach(connection => {
+            if (connection.wss.readyState === WebSocket.OPEN) {
+              connection.wss.send(JSON.stringify({ type: 'image', message: event.message, name: myConnection ? myConnection.name : 'Неизвестный' }));
+            }
+          });
+
+        }
       } catch(e){
         console.error(e);
       }
