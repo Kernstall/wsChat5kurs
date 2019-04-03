@@ -44,6 +44,17 @@ class WsChatRoom {
           console.error(e);
         }
       });
+      const population = this.connections.map( elem => {
+        return {
+          id: elem.id,
+          name: elem.name,
+        }
+      });
+      this.connections.forEach(connection => {
+        if (connection.wss.readyState === WebSocket.OPEN) {
+          connection.wss.send(JSON.stringify({ type: 'pop', message: population }));
+        }
+      });
     }, 30000);
 
     console.log('Initializing ws room: ' + name);
@@ -64,9 +75,16 @@ class WsChatRoom {
           if (myConnection) {
             myConnection.name = event.name;
           }
+          const population = this.connections.map( elem => {
+            return {
+              id: elem.id,
+              name: elem.name,
+            }
+          });
           this.connections.forEach(connection => {
             if (connection.wss.readyState === WebSocket.OPEN) {
               connection.wss.send(JSON.stringify({ type: 'system', message: `Пользователь с ником ${ event.name } присоединился`}));
+              connection.wss.send(JSON.stringify({ type: 'pop', message: population }));
             }
           });
           if(this.discordBot) {

@@ -17,6 +17,11 @@ display: flex;
     padding: 5px;
 }
 
+.onlineWrap {
+    display: flex;
+    flex-wrap: wrap;
+}
+
 @media (max-width: 700px) {
     .container {
         width: unset;

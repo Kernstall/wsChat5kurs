@@ -7,10 +7,8 @@ import DialogActions from '@material-ui/core/DialogActions';
 import Dialog from '@material-ui/core/Dialog';
 import Button from '@material-ui/core/Button';
 import Message from "./Message";
-import Paper from '@material-ui/core/Paper';
 import TextField from '@material-ui/core/TextField';
-import Upload from 'material-ui-upload/Upload';
-
+import OnlineTooltip from './OnlineTooltip'
 
 import style from './chat.module.css';
 
@@ -29,8 +27,9 @@ const styles = {
   },
   uploadButton: {
     minHeight: '64px',
-  }
+  },
 };
+
 
 class Chat extends React.Component {
 
@@ -45,13 +44,14 @@ class Chat extends React.Component {
       open: true,
       ws: null,
       messageList: [],
-      message: ''
+      message: '',
+      population: [],
     };
   }
 
   componentWillMount() {
-    //const socket = new WebSocket(`wss://${ window.location.host }/websocket/${ this.props.match.params.port }`);
-    const socket = new WebSocket(`ws://localhost:3001/websocket/${ this.props.match.params.port }`);
+    const socket = new WebSocket(`wss://${ window.location.host }/websocket/${ this.props.match.params.port }`);
+    //const socket = new WebSocket(`ws://localhost:3001/websocket/${ this.props.match.params.port }`);
     this.setState({ ws: socket }) 
   }
 
@@ -68,7 +68,13 @@ class Chat extends React.Component {
 
   handleSubmit() {
     this.state.ws.addEventListener('message', (event) => {
-      this.addMessage(JSON.parse(event.data));
+      const data = JSON.parse(event.data);
+      if(data.type === 'pop') {
+        console.log(data.message);
+        this.setState({ population: data.message });
+      } else {
+        this.addMessage(JSON.parse(event.data));
+      }
     });
     this.state.ws.send(JSON.stringify({type: 'greetings', name: this.state.name}));
     this.setState({ open: false });
@@ -93,6 +99,14 @@ class Chat extends React.Component {
     const { classes } = this.props;
     return (
       <div className={ style.container }>
+        <div className={ style.onlineWrap }>
+          <span>Online:</span>
+          {
+            this.state.population.map(elem =>
+                <OnlineTooltip id={elem.id} name={elem.name}/> )
+          }
+
+        </div>
         <div className={ classes.map }>
         {this.state.messageList.map((message, index) => <Message key={index} event={ message }/> )}
         </div>
