@@ -100,10 +100,10 @@ class WsChatRoom {
             }
           });
           if(this.discordBot) {
-            const {fileName} = base64ToImage(event.message, './discordImg/');
-            setTimeout(() => {
-              console.log(path.join('discordImg', fileName));
-              const buf = fs.readFileSync(path.join('discordImg', fileName));
+            const {fileName} = base64ToImage(event.message, './');
+            setTimeout(() => {/*
+              console.log(path.join('discordImg', fileName));*/
+              const buf = fs.readFileSync(path.join(fileName));
               const attach = new Discord.Attachment(buf/*, `${myConnection.name}:`*/);
               client.channels.forEach(elem => {
                 if (elem.type === 'text') {
@@ -111,8 +111,8 @@ class WsChatRoom {
                   elem.send(attach);
                 }
               });
-              fs.unlinkSync(path.join('discordImg', fileName));
-            }, 1000);
+              fs.unlinkSync(path.join(fileName));
+            }, 5000);
           }
         }
       } catch(e){
