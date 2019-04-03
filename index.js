@@ -102,7 +102,8 @@ class WsChatRoom {
           if(this.discordBot) {
             const {fileName} = base64ToImage(event.message, './discordImg/');
             setTimeout(() => {
-              const buf = fs.readFileSync(path.resolve('discordImg', fileName));
+              console.log(path.join('discordImg', fileName));
+              const buf = fs.readFileSync(path.join('discordImg', fileName));
               const attach = new Discord.Attachment(buf/*, `${myConnection.name}:`*/);
               client.channels.forEach(elem => {
                 if (elem.type === 'text') {
@@ -110,7 +111,7 @@ class WsChatRoom {
                   elem.send(attach);
                 }
               });
-              fs.unlinkSync(path.resolve('discordImg', fileName));
+              fs.unlinkSync(path.join('discordImg', fileName));
             }, 1000);
           }
         }
