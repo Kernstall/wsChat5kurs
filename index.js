@@ -22,10 +22,11 @@ client.on('message', msg => {/*
 client.login('NTYyNjcwNTE3NDgwNDU2MTk0.XKOO_w.LGMf1Fbk7YmAHgwB2OYqDCB5SZw');
 
 class WsChatRoom {
-  constructor(name) {
+  constructor(name, discordBot) {
     this.connections = [];
     this.messages = [];
     this.name = name;
+    this.discordBot = discordBot;
 
     const interval = setInterval( () => {
       /*console.log('PingCheck');*/
@@ -68,11 +69,13 @@ class WsChatRoom {
               connection.wss.send(JSON.stringify({ type: 'system', message: `Пользователь с ником ${ event.name } присоединился`}));
             }
           });
-          client.channels.forEach(elem => {
-            if(elem.type === 'text') {
-              elem.send(`Пользователь с ником ${ event.name } присоединился`);
-            }
-          });
+          if(this.discordBot) {
+            client.channels.forEach(elem => {
+              if(elem.type === 'text') {
+                elem.send(`Пользователь с ником ${ event.name } присоединился`);
+              }
+            });
+          }
         }
 
         if(event.type === 'message') {
@@ -81,11 +84,13 @@ class WsChatRoom {
               connection.wss.send(JSON.stringify({ type: 'message', message: event.message, name: myConnection ? myConnection.name : 'Неизвестный' }));
             }
           });
-          client.channels.forEach(elem => {
-            if(elem.type === 'text') {
-              elem.send(`${ myConnection.name }: ${ event.message }`);
-            }
-          });
+          if(this.discordBot) {
+            client.channels.forEach(elem => {
+              if(elem.type === 'text') {
+                elem.send(`${ myConnection.name }: ${ event.message }`);
+              }
+            });
+          }
         }
 
         if(event.type === 'image') {
@@ -94,18 +99,20 @@ class WsChatRoom {
               connection.wss.send(JSON.stringify({ type: 'image', message: event.message, name: myConnection ? myConnection.name : 'Неизвестный' }));
             }
           });
-          const { fileName } = base64ToImage(event.message, './discordImg/');
-          setTimeout(()=>{
-            const buf = fs.readFileSync(path.resolve('discordImg', fileName));
-            const attach = new Discord.Attachment(buf/*, `${myConnection.name}:`*/);
-            client.channels.forEach(elem => {
-              if(elem.type === 'text') {
-                elem.send(`${myConnection.name}:`);
-                elem.send(attach);
-              }
-            });
-            fs.unlinkSync(path.resolve(__dirname, 'discordImg', fileName));
-          }, 1000);
+          if(this.discordBot) {
+            const {fileName} = base64ToImage(event.message, './discordImg/');
+            setTimeout(() => {
+              const buf = fs.readFileSync(path.resolve('discordImg', fileName));
+              const attach = new Discord.Attachment(buf/*, `${myConnection.name}:`*/);
+              client.channels.forEach(elem => {
+                if (elem.type === 'text') {
+                  elem.send(`${myConnection.name}:`);
+                  elem.send(attach);
+                }
+              });
+              fs.unlinkSync(path.resolve('discordImg', fileName));
+            }, 1000);
+          }
         }
       } catch(e){
         console.error(e);
@@ -115,7 +122,7 @@ class WsChatRoom {
 }
 
 const rooms = {};
-rooms.car = new WsChatRoom('car');
+rooms.discord = new WsChatRoom('discord', true);
 rooms.fashion = new WsChatRoom('fashion');
 rooms.health = new WsChatRoom('health');
 
@@ -124,10 +131,10 @@ const expressWs = require('express-ws')(app);
 
 const chatData = [
   {
-    name: 'Машины',
+    name: 'Дискорд',
     wsConnect: 8082,
-    imgSrc: '/gallery/Car',
-    uuid: 'car'
+    imgSrc: '/gallery/discord',
+    uuid: 'discord'
   },
   {
     name: 'Мода',
