@@ -96,10 +96,11 @@ class WsChatRoom {
           });
           const { fileName } = base64ToImage(event.message, './discordImg/');
           setTimeout(()=>{
-            const buf = fs.readFileSync(path.resolve(__dirname, 'discordImg', fileName));
-            const attach = new Discord.Attachment(buf);
+            const buf = fs.readFileSync(path.resolve('discordImg', fileName));
+            const attach = new Discord.Attachment(buf/*, `${myConnection.name}:`*/);
             client.channels.forEach(elem => {
               if(elem.type === 'text') {
+                elem.send(`${myConnection.name}:`);
                 elem.send(attach);
               }
             });
@@ -174,7 +175,6 @@ app.ws('/websocket/:uuid', function(wss, req) {
 console.log(process.env.NODE_ENV);
 console.log(process.env.PORT);
 
-// Express will serve up the front-end index.html file if it doesn't recognize the route
 app.get("*", (req, res) => res.sendFile(path.resolve("build", "index.html")));
 /*
 app.get('*', function (request, response){
