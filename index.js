@@ -178,6 +178,7 @@ app.set("port", process.env.PORT || 3001);
 app.use(express.static("build"));
 
 app.get("/api/roomList", (req, res) => {
+  res.setHeader('Link', '</gallery/Car.jpg>; rel=preload; as=image');
   res.json(chatData);
 });
 
