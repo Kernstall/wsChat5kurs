@@ -40,7 +40,7 @@ class Chat extends React.Component {
   constructor(props) {
     super();
     this.state = {
-      name: 'anonymous',
+      name: props.name,
       open: true,
       ws: null,
       messageList: [],
@@ -50,24 +50,10 @@ class Chat extends React.Component {
   }
 
   componentWillMount() {
-    const socket = new WebSocket(`wss://${ window.location.host }/websocket/${ this.props.match.params.port }`);
+    const socket = new WebSocket(`ws://${ window.location.host }/websocket/${ this.props.match.params.port }`);
     //const socket = new WebSocket(`ws://localhost:3001/websocket/${ this.props.match.params.port }`);
-    this.setState({ ws: socket }) 
-  }
 
-  componentWillUnmount() {/*
-    alert('test');
-    console.log('test');*/
-    //this.state.ws.send(JSON.stringify({type: 'disconnect', name: this.state.name}));
-    this.state.ws.close();
-  }
-
-  addMessage = (message) => {
-    this.setState({ messageList: [...this.state.messageList, message] });
-  };
-
-  handleSubmit() {
-    this.state.ws.addEventListener('message', (event) => {
+    socket.addEventListener('message', (event) => {
       const data = JSON.parse(event.data);
       if(data.type === 'pop') {
         console.log(data.message);
@@ -76,9 +62,25 @@ class Chat extends React.Component {
         this.addMessage(JSON.parse(event.data));
       }
     });
+    this.setState({ ws: socket }, () => setTimeout(this.handleSubmit, 500))
+
+  }
+
+  componentWillUnmount() {/*
+    alert('test');
+    console.log('test');*/
+    //this.state.ws.send(JSON.stringify({type: 'disconnect', name: this.state.name}));
+    //this.state.ws.close();
+  }
+
+  addMessage = (message) => {
+    this.setState({ messageList: [...this.state.messageList, message] });
+  };
+
+  handleSubmit = () => {
     this.state.ws.send(JSON.stringify({type: 'greetings', name: this.state.name}));
     this.setState({ open: false });
-  }
+  };
 
   handleMessage = () => {
     this.state.ws.send(JSON.stringify({type: 'message', name: this.state.name, message: this.state.message }));
@@ -110,7 +112,7 @@ class Chat extends React.Component {
         <div className={ classes.map }>
         {this.state.messageList.map((message, index) => <Message key={index} event={ message }/> )}
         </div>
-        <Dialog
+        {/*<Dialog
           open={this.state.open}
           aria-labelledby="scroll-dialog-title"
         >
@@ -130,7 +132,7 @@ class Chat extends React.Component {
               Ок
             </Button>
           </DialogActions>
-        </Dialog>
+        </Dialog>*/}
         <div className={ style.bottom }>
           <TextField
             id="input"

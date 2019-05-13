@@ -6,6 +6,8 @@ import GridListTile from '@material-ui/core/GridListTile';
 import GridListTileBar from '@material-ui/core/GridListTileBar';
 import IconButton from '@material-ui/core/IconButton';
 import MessageIcon from '@material-ui/icons/Message';
+import style from "./chat.module.css";
+import OnlineTooltip from "./OnlineTooltip";
 
 const styles = theme => ({
   root: {
@@ -56,6 +58,14 @@ class RoomList extends React.Component {
     const {data} = this.state;
     return (
       <div className={classes.root}>
+        { this.props.population.length > 0 && <div className={ style.onlineWrap2 }>
+          <span>Online: </span>
+          {
+            this.props.population.map(elem =>
+                <OnlineTooltip imgSrc={ elem.imageName } id={elem.id} name={elem.name}/> )
+          }
+
+        </div> }
         <GridList className={classes.gridList} cols={1} cellHeight={200}>
           { data && data.map(tile => (
             <GridListTile key={tile.name}>
@@ -67,9 +77,9 @@ class RoomList extends React.Component {
                   title: classes.title,
                 }}
                 actionIcon={
-                  <IconButton onClick = { () => window.location.replace(`/#/chat/${ tile.uuid }`) }>
+                  this.props.name !== '' ? <IconButton onClick = { () => window.location.replace(`/#/chat/${ tile.uuid }`) }>
                     <MessageIcon className={classes.icon} />
-                  </IconButton>
+                  </IconButton> : null
                 }
               />
             </GridListTile>

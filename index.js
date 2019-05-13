@@ -21,6 +21,65 @@ client.on('message', msg => {/*
 
 client.login('NTYyNjcwNTE3NDgwNDU2MTk0.XKOO_w.LGMf1Fbk7YmAHgwB2OYqDCB5SZw');
 
+class OnlineList {
+  constructor() {
+    this.connections = [];
+    this.population = [];
+
+    const interval = setInterval( () => {
+      this.connections.forEach((connection) => {
+        try{
+          if (connection.isAlive === false || connection.wss.readyState === WebSocket.CLOSED){
+            const index = this.connections.findIndex((elem) => elem === connection);
+            if(index >= 0 ) { this.connections.splice(index, index); this.population.splice(index, index); this.updateOnline(); }
+            return connection.wss.terminate();
+          }
+          connection.isAlive = false;
+          connection.wss.ping();
+        } catch(e) {
+          console.error(e);
+        }
+      });
+    }, 30000);
+  }
+  addConnection(wss) {
+    const id = Math.random();
+    const connection = { wss, name: '', id, isAlive: true };
+    wss.on('pong', () => { connection.isAlive = true });
+    wss.on('message', (msg) => {
+      try {
+        const event = JSON.parse(msg);
+        //const myConnection = this.connections.find(elem => elem.id === id);
+        const myConnection = connection;
+        if(event.type === 'greetings') {
+          if (myConnection) {
+            myConnection.name = event.name;
+            var optionalObj = {'type':'jpg'};
+            const { fileName } = base64ToImage(event.image, './gallery/', optionalObj);
+            this.connections.push(connection);
+            this.population.push({
+              id: id,
+              name: event.name,
+              imageName: fileName.slice(0, -4)
+            });
+            this.updateOnline();
+          }
+        }
+      } catch(e){
+        console.error(e);
+      }
+    });
+  }
+
+  updateOnline() {
+    this.connections.forEach(connection => {
+      if (connection.wss.readyState === WebSocket.OPEN) {
+        connection.wss.send(JSON.stringify({ type: 'pop', message: this.population }));
+      }
+    });
+  }
+}
+
 class WsChatRoom {
   constructor(name, discordBot) {
     this.connections = [];
@@ -177,10 +236,22 @@ app.set("port", process.env.PORT || 3001);
 
 app.use(express.static("build"));
 
+
+const online = new OnlineList();
+app.ws('/online', function(wss, req) {
+  online.addConnection(wss);
+});
+
 app.get("/api/roomList", (req, res) => {
   let linkHeader = chatData.map( entry => `<${ entry.imgSrc }>; rel=preload; as=image` ).join(',');
   res.setHeader('Link', linkHeader);
   res.json(chatData);
+});
+
+app.get("/api/population", (req, res) => {
+  let linkHeader = online.population.map( entry => `</galery/${ entry.imageName }>; rel=preload; as=image` ).join(',');
+  res.setHeader('Link', linkHeader);
+  res.json(online.population);
 });
 
 app.get('/gallery/:name', async (request, res) => {

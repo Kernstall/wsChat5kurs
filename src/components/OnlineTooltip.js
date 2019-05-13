@@ -18,6 +18,11 @@ const styles = theme => ({
   icon: {
     margin: theme.spacing.unit * 2,
   },
+  avatar: {
+    borderRadius: '50%',
+    width: '48px',
+    height: '48px'
+  }
 });
 
 function SimpleTooltips(props) {
@@ -25,9 +30,8 @@ function SimpleTooltips(props) {
   return (
       <div>
         <Tooltip title={ name ? name : ' ' }>
-          <IconButton aria-label={ name }>
-            <Icon className={classNames(classes.icon, 'fas fa-user-alt')} />
-          </IconButton>
+            { !props.imgSrc ?
+                <IconButton aria-label={ name }><Icon className={classNames(classes.icon, 'fas fa-user-alt')} /> </IconButton> : <img className={ classes.avatar } src={ `/gallery/${ props.imgSrc }` } alt={ '404'}/> }
         </Tooltip>
       </div>
   );
