@@ -39,18 +39,9 @@ class Chat extends React.Component {
 
   constructor(props) {
     super();
-    this.state = {
-      name: props.name,
-      open: true,
-      ws: null,
-      messageList: [],
-      message: '',
-      population: [],
-    };
-  }
 
-  componentWillMount() {
-    const socket = new WebSocket(`ws://${ window.location.host }/websocket/${ this.props.match.params.port }`);
+    console.log('test');
+    const socket = new WebSocket(`ws://${ window.location.host }/websocket/${ props.match.params.port }`);
     //const socket = new WebSocket(`ws://localhost:3001/websocket/${ this.props.match.params.port }`);
 
     socket.addEventListener('message', (event) => {
@@ -62,7 +53,18 @@ class Chat extends React.Component {
         this.addMessage(JSON.parse(event.data));
       }
     });
-    this.setState({ ws: socket }, () => setTimeout(this.handleSubmit, 500))
+    this.state = {
+      name: props.name,
+      open: true,
+      ws: socket,
+      messageList: [],
+      message: '',
+      population: [],
+    };
+    setTimeout(this.handleSubmit, 500);
+  }
+
+  componentDidMount() {
 
   }
 
@@ -78,7 +80,7 @@ class Chat extends React.Component {
   };
 
   handleSubmit = () => {
-    this.state.ws.send(JSON.stringify({type: 'greetings', name: this.state.name}));
+    this.state.ws.send(JSON.stringify({type: 'greetings', name: this.props.match.params.name }));
     this.setState({ open: false });
   };
 

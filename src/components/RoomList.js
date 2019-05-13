@@ -77,7 +77,7 @@ class RoomList extends React.Component {
                   title: classes.title,
                 }}
                 actionIcon={
-                  this.props.name !== '' ? <IconButton onClick = { () => window.location.replace(`/#/chat/${ tile.uuid }`) }>
+                  this.props.name !== '' ? <IconButton onClick = { () => window.location.replace(`/#/chat/${ tile.uuid }/${ this.props.name }`) }>
                     <MessageIcon className={classes.icon} />
                   </IconButton> : null
                 }

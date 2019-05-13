@@ -31,7 +31,7 @@ class App extends React.Component {
         <div style={ { height: window.innerHeight - 200 } }>
           <Switch>
             <Route exact path='/' component={ props => <RoomList { ...props } population={this.state.population} name={ this.state.name }/>}/>
-            <Route path='/chat/:port' component={props => <Chat { ...props } name={ this.state.name }/>}/>
+            <Route path='/chat/:port/:name' component={Chat}/>
           </Switch>
         </div>
       </div>
