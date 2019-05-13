@@ -41,7 +41,7 @@ class Chat extends React.Component {
     super();
 
     console.log('test');
-    const socket = new WebSocket(`ws://${ window.location.host }/websocket/${ props.match.params.port }`);
+    const socket = new WebSocket(`wss://${ window.location.host }/websocket/${ props.match.params.port }`);
     //const socket = new WebSocket(`ws://localhost:3001/websocket/${ this.props.match.params.port }`);
 
     socket.addEventListener('message', (event) => {

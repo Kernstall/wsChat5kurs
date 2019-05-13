@@ -68,7 +68,7 @@ class Header extends React.Component {
   }
 
   componentWillMount() {
-    const socket = new WebSocket(`ws://${ window.location.host }/online`);
+    const socket = new WebSocket(`wss://${ window.location.host }/online`);
 
     socket.addEventListener('message', (event) => {
       const data = JSON.parse(event.data);
